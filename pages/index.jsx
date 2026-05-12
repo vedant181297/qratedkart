@@ -44,7 +44,7 @@ function generateProducts() {
     { creator: "artbyneha", name: "Hanuman Ultra", desc: "Hanuman in Dragon Ball energy aura", img: "🐒" },
     { creator: "blrcityco", name: "Namma Metro", desc: "Purple line love letter to Bangalore's metro", img: "🚇" },
     { creator: "blrcityco", name: "Auto Raja", desc: "The iconic green-yellow auto in geometric art", img: "🛺" },
-    { creator: "blrcityco", name: "Filter Kaapi Club", desc: "For the davara-tumbler faithful", img: "☕" },
+    { creator: "blrcityco", name: "Filter Kaapi Club", desc: "For the davara-tumbler faithful", img: "☕", mockup: "chai" },
     { creator: "ironmitra", name: "No Rest Days", desc: "Bold typography. Zero excuses.", img: "🔥" },
     { creator: "ironmitra", name: "Protein & Prayers", desc: "Gym motivation meets desi soul", img: "🙏" },
     { creator: "thechennaibass", name: "Bass Drop Chennai", desc: "Waveform art from our latest EP", img: "🔊" },
@@ -75,6 +75,7 @@ function generateProducts() {
       const roundedPrice = Math.round(price / 50) * 50 - 1;
       products.push({
         id: id++, creator: d.creator, name: d.name, desc: d.desc, img: d.img,
+        mockup: d.mockup || null,
         type, price: Math.max(roundedPrice, baseCost + 100),
         baseCost, colors: COLORS_PALETTE.slice(0, 2 + Math.floor(Math.random() * 4)),
         sizes: type === "Mug" || type === "Tote Bag" ? ["One Size"] : SIZES,
@@ -110,6 +111,76 @@ const Icons = {
   Sparkle: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14 9L21 9L15.5 13.5L17.5 21L12 16.5L6.5 21L8.5 13.5L3 9L10 9Z"/></svg>,
 };
 
+// --- MOCKUP COMPONENTS ---
+function ChaiMockup({ bgColor = "#111111", size = 220 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      {/* T-shirt shape */}
+      <path d="M55 40 L30 65 L55 75 L55 180 L165 180 L165 75 L190 65 L165 40 L145 55 C138 62 124 67 110 67 C96 67 82 62 75 55 Z"
+        fill={bgColor} stroke="#333" strokeWidth="1.5"/>
+      {/* Design area on shirt */}
+      {/* Glass of chai */}
+      <g transform="translate(72, 78)">
+        {/* Steam wisps */}
+        <path d="M28 12 Q26 7 28 3" stroke="#d4a96a" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        <path d="M33 10 Q31 5 33 1" stroke="#d4a96a" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        {/* Glass body */}
+        <rect x="20" y="15" width="26" height="32" rx="3" fill="#c8813a" opacity="0.9"/>
+        <rect x="22" y="15" width="10" height="32" rx="2" fill="#e8a055" opacity="0.4"/>
+        {/* Glass rim */}
+        <rect x="19" y="14" width="28" height="4" rx="2" fill="#d4956e"/>
+        {/* Glass base */}
+        <rect x="22" y="45" width="22" height="4" rx="2" fill="#b87040"/>
+        {/* "my" text */}
+        <text x="0" y="20" fontFamily="Georgia, serif" fontSize="11" fill="#f5e6c8" fontStyle="italic">my</text>
+        {/* CHAH text */}
+        <text x="48" y="30" fontFamily="Impact, Arial Black, sans-serif" fontSize="18" fill="#f5e6c8" fontWeight="900">CHAH,</text>
+        {/* sparkle */}
+        <path d="M55 8 L57 13 L62 13 L58 16 L60 21 L55 18 L50 21 L52 16 L48 13 L53 13 Z" fill="#c8813a" opacity="0.8"/>
+        {/* "my" small */}
+        <text x="48" y="44" fontFamily="Georgia, serif" fontSize="8" fill="#f5e6c8" fontStyle="italic">my</text>
+        {/* RULES text */}
+        <text x="56" y="55" fontFamily="Impact, Arial Black, sans-serif" fontSize="16" fill="#f5f5f0" fontWeight="900">RULES.</text>
+      </g>
+    </svg>
+  );
+}
+
+function ProductThumbnail({ product, creator, size = 220 }) {
+  if (product.mockup === "chai") {
+    const bgColor = product.colors?.[0]?.hex || "#111111";
+    return (
+      <div style={{
+        width: "100%", height: size, display: "flex", alignItems: "center",
+        justifyContent: "center", background: "#e8e4dd", position: "relative"
+      }}>
+        <ChaiMockup bgColor={bgColor} size={size - 20} />
+        <span style={{
+          position: "absolute", top: 10, right: 10, background: "rgba(0,0,0,0.6)",
+          color: "white", padding: "3px 10px", borderRadius: 100, fontSize: 11, fontWeight: 600
+        }}>{product.type}</span>
+        <span style={{
+          position: "absolute", bottom: 8, left: 10, background: "#c0272d",
+          color: "white", padding: "2px 8px", borderRadius: 100, fontSize: 10, fontWeight: 700
+        }}>MOCKUP</span>
+      </div>
+    );
+  }
+  // Default emoji thumbnail
+  return (
+    <div style={{
+      height: size, background: `linear-gradient(135deg, ${creator.theme.bg}, ${creator.theme.primary}33)`,
+      display: "flex", alignItems: "center", justifyContent: "center", fontSize: 64, position: "relative"
+    }}>
+      {product.img}
+      <span style={{
+        position: "absolute", top: 10, right: 10, background: "rgba(0,0,0,0.6)",
+        color: "white", padding: "3px 10px", borderRadius: 100, fontSize: 11, fontWeight: 600
+      }}>{product.type}</span>
+    </div>
+  );
+}
+
 // --- STYLES ---
 const fontImport = `@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');`;
 
@@ -121,8 +192,8 @@ const globalStyles = `
     --qk-white: #fafaf9;
     --qk-cream: #f5f0e8;
     --qk-warm: #e8e0d4;
-    --qk-accent: #e84e1c;
-    --qk-accent-soft: #ff6b3d;
+    --qk-accent: #c0272d;
+    --qk-accent-soft: #e03030;
     --qk-text: #1a1a1a;
     --qk-text-muted: #6b6560;
     --qk-border: #e0dbd4;
@@ -252,9 +323,18 @@ export default function QratedkartApp() {
                 <Icons.Back />
               </button>
             )}
-            <div onClick={() => navigateTo("home")} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.5px", color: "var(--qk-accent)" }}>Q</span>
-              <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-0.3px" }}>ratedkart</span>
+            <div onClick={() => navigateTo("home")} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}>
+              {/* Q icon — matches logo: dark circle with red sweep bottom-left */}
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2C7.373 2 2 7.373 2 14C2 20.627 7.373 26 14 26C20.627 26 26 20.627 26 14C26 7.373 20.627 2 14 2Z" fill="#1a1a1a"/>
+                <path d="M14 2C10.5 2 7.4 3.6 5.3 6.1L14 14L20.8 20.8C23.9 18.7 26 15.6 26 14C26 7.373 20.627 2 14 2Z" fill="#1a1a1a"/>
+                <path d="M5.3 6.1C3.3 8.2 2 11 2 14C2 17.5 3.5 20.6 5.9 22.8L14 14L5.3 6.1Z" fill="#c0272d"/>
+                <circle cx="14" cy="14" r="6" fill="white"/>
+                <path d="M18 18L22 23" stroke="#c0272d" strokeWidth="2.5" strokeLinecap="round"/>
+              </svg>
+              <span style={{ fontSize: 17, fontWeight: 800, letterSpacing: "-0.3px", color: "#1a1a1a" }}>
+                Qrated<span style={{ color: "#c0272d" }}>kart</span>
+              </span>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -512,15 +592,8 @@ function HomeView({ filteredProducts, searchQuery, setSearchQuery, selectedNiche
                   onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.08)"; }}
                   onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                 >
-                  <div style={{
-                    height: 220, background: `linear-gradient(135deg, ${creator.theme.bg}, ${creator.theme.primary}33)`,
-                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: 64, position: "relative"
-                  }}>
-                    {product.img}
-                    <span style={{
-                      position: "absolute", top: 10, right: 10, background: "rgba(0,0,0,0.6)",
-                      color: "white", padding: "3px 10px", borderRadius: 100, fontSize: 11, fontWeight: 600
-                    }}>{product.type}</span>
+                  <div style={{ overflow: "hidden", borderRadius: "var(--qk-radius) var(--qk-radius) 0 0" }}>
+                    <ProductThumbnail product={product} creator={creator} size={220} />
                   </div>
                   <div style={{ padding: 16 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
@@ -643,10 +716,9 @@ function CreatorView({ creator, navigateTo }) {
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.08)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
             >
-              <div style={{
-                height: 200, background: `linear-gradient(135deg, ${creator.theme.bg}, ${creator.theme.primary}33)`,
-                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 56
-              }}>{product.img}</div>
+              <div style={{ borderRadius: "var(--qk-radius) var(--qk-radius) 0 0", overflow: "hidden" }}>
+                <ProductThumbnail product={product} creator={creator} size={200} />
+              </div>
               <div style={{ padding: 14 }}>
                 <p style={{ fontSize: 11, color: "var(--qk-text-muted)", marginBottom: 4 }}>{product.type}</p>
                 <p style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{product.name}</p>
@@ -676,11 +748,14 @@ function ProductView({ product, addToCart, navigateTo }) {
         <div style={{ flex: "1 1 380px" }}>
           <div style={{
             aspectRatio: "1", borderRadius: "var(--qk-radius-lg)", overflow: "hidden",
-            background: `linear-gradient(145deg, ${creator.theme.bg}, ${creator.theme.primary}33)`,
-            display: "flex", alignItems: "center", justifyContent: "center", fontSize: 120,
+            background: product.mockup ? "#e8e4dd" : `linear-gradient(145deg, ${creator.theme.bg}, ${creator.theme.primary}33)`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: product.mockup ? "inherit" : 120,
             position: "relative"
           }}>
-            {product.img}
+            {product.mockup === "chai"
+              ? <ChaiMockup bgColor={product.colors?.[0]?.hex || "#111"} size={340} />
+              : product.img}
             <div style={{
               position: "absolute", bottom: 16, left: 16, right: 16, display: "flex", gap: 6
             }}>
@@ -938,8 +1013,13 @@ function DashboardView({ navigateTo, dashboardTab, setDashboardTab }) {
       }}>
         <div style={{ padding: "0 20px 24px", borderBottom: "1px solid #222" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-            <span style={{ fontSize: 20, fontWeight: 900, color: "var(--qk-accent)" }}>Q</span>
-            <span style={{ fontWeight: 700, fontSize: 14 }}>Creator Studio</span>
+            <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 2C7.373 2 2 7.373 2 14C2 20.627 7.373 26 14 26C20.627 26 26 20.627 26 14C26 7.373 20.627 2 14 2Z" fill="#fff"/>
+              <path d="M5.3 6.1C3.3 8.2 2 11 2 14C2 17.5 3.5 20.6 5.9 22.8L14 14L5.3 6.1Z" fill="#c0272d"/>
+              <circle cx="14" cy="14" r="6" fill="#1a1a1a"/>
+              <path d="M18 18L22 23" stroke="#c0272d" strokeWidth="2.5" strokeLinecap="round"/>
+            </svg>
+            <span style={{ fontWeight: 800, fontSize: 14 }}>Qrated<span style={{ color: "#c0272d" }}>kart</span></span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 28 }}>{creator.avatar}</span>
@@ -990,7 +1070,7 @@ function DashboardView({ navigateTo, dashboardTab, setDashboardTab }) {
             {/* Stats Grid */}
             <div className="fade-in stagger-2" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 32 }}>
               {[
-                { label: "Total Revenue", value: `₹${totalRevenue.toLocaleString()}`, icon: <Icons.Rupee />, color: "#e84e1c" },
+                { label: "Total Revenue", value: `₹${totalRevenue.toLocaleString()}`, icon: <Icons.Rupee />, color: "#c0272d" },
                 { label: "Your Earnings", value: `₹${Math.round(totalEarnings).toLocaleString()}`, icon: <Icons.TrendUp />, color: "#2d9c5a" },
                 { label: "Total Orders", value: totalOrders.toString(), icon: <Icons.Package />, color: "#0984e3" },
                 { label: "Products", value: products.length.toString(), icon: <Icons.Sparkle />, color: "#6c5ce7" },
